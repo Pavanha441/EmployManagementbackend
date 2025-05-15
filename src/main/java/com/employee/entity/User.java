@@ -12,12 +12,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="users")
-public class User  extends BaseModel{
+@Table(name = "users")
+public class User extends BaseModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
@@ -29,19 +30,18 @@ public class User  extends BaseModel{
 
 	private String password;
 
-	@Column(updatable = false, nullable = true,unique = true)
+	@Column(updatable = false, nullable = true, unique = true)
 	private String email;
 
 	@Column(name = "is_active")
 	private boolean isActive = true;
 
-	
-	
-
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
+	@OneToOne(mappedBy = "user")
+	private Employee employee;
 
 	public Long getId() {
 		return id;
@@ -51,7 +51,6 @@ public class User  extends BaseModel{
 		this.id = id;
 	}
 
-	
 	public String getUsername() {
 		return username;
 	}
@@ -84,8 +83,6 @@ public class User  extends BaseModel{
 		this.isActive = isActive;
 	}
 
-	
-
 	public Set<Role> getRoles() {
 		return roles;
 	}
@@ -94,5 +91,12 @@ public class User  extends BaseModel{
 		this.roles = roles;
 	}
 
-	
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
 }

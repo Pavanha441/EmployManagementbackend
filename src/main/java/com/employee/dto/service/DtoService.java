@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -127,17 +128,45 @@ public class DtoService {
 
 		return roleResponses;
 	}
-	
-	public LoginResponse  loggedUserDetails(User details,String token) {
-		
+
+	public LoginResponse loggedUserDetails(User details, String token) {
+
 		LoginResponse loginResponse = new LoginResponse();
-		
+
 		loginResponse.setToken(token);
 		loginResponse.setUsername(details.getUsername());
 		loginResponse.setEmail(details.getEmail());
 		loginResponse.setRoles(details.getRoles());
-		
+
 		return loginResponse;
+	}
+
+	public User registerEmployToUser(EmployRequest employRequest) {
+
+		String pwd = UUID.randomUUID().toString().substring(0, 8);
+
+		User user = new User();
+		user.setUsername(employRequest.getUsername());
+		user.setEmail(employRequest.getEmail());
+		user.setPassword(passwordEncoder.encode(pwd));
+
+		Set<Role> roles = new HashSet<>();
+
+		if (CollectionUtils.isEmpty(employRequest.getRoles())) {
+			Role role = roleRepository.findByName(EmployUtils.ROLE_USER)
+					.orElseThrow(() -> new RuntimeException("Default role not found"));
+			roles.add(role);
+		} else {
+			for (String role : employRequest.getRoles()) {
+				Role userRole = roleRepository.findByName(role)
+						.orElseThrow(() -> new RuntimeException("Role not found :" + role));
+				roles.add(userRole);
+			}
+		}
+
+		user.setRoles(roles);
+
+		return user;
 	}
 
 }

@@ -22,14 +22,14 @@ public class FileStorageServiceImpl implements FileStorageService {
 
 	@Override
 	public String saveFile(MultipartFile file, String path) throws IOException {
-
+		
 		if (file == null || file.isEmpty()) {
 			throw new FileNotFoundException(" File cannot be empty");
 		}
 
 		String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
-		Path dirPath = Paths.get(fileDirectory, "photos");
+		Path dirPath = Paths.get(fileDirectory, path);
 		try {
 
 			Files.createDirectories(dirPath);

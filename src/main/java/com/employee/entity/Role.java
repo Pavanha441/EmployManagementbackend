@@ -3,6 +3,9 @@ package com.employee.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,12 +20,15 @@ public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
 	private Long id;
 
 	@Column(nullable = false, unique = true)
+	@JsonProperty("name")
 	private String name;
 
 	@ManyToMany(mappedBy = "roles")
+	@JsonIgnore
 	private Set<User> users= new HashSet<>();
 	
 	

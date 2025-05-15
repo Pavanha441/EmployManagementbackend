@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -35,6 +37,12 @@ public class Employee extends BaseModel {
 
 	private String resumeName;
 
+	
+	@OneToOne
+	@JoinColumn(name="user_id" , referencedColumnName = "id") 
+	private User user;
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -122,5 +130,15 @@ public class Employee extends BaseModel {
 	public void setMiddleName(String middleName) {
 		this.middleName = middleName;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	
 
 }
